@@ -11,10 +11,13 @@ PDFTRIMWHITE=pdfcrop
 PDF=rpz.pdf
 
 # Input paths
+DIA=graphics/dia
+DOT=graphics/dot
 SVG=graphics/svg
 IMG=graphics/img
 TEX=tex
 DEPS=.deps
+SRC=src
 INC=$(TEX)/inc
 
 # Input files

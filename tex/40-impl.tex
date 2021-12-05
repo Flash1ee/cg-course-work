@@ -11,8 +11,110 @@ ThreeJS \cite{impl:three_js}, которая предоставляет canvas (
 В качестве среды разработки выбран текстовый редактор Visual Studio Code \cite{impl:vscode}, содержащий большое количеством плагинов и инструментов для различных языков программирования, в том числе JavaScript. Такие инструменты облегчают и ускоряют процесс разработки программного обеспеченияd.
 Для запуска приложения используется python сервер \cite{impl:python}, позволяющий использовать ПО в браузере.  
 \section{Детали реализации}
+В листингах \ref{lst:body_compose} -- \ref{lst:raymarch} приведен исходный код реализации алгоритмов
+для преобразования тел и отрисовки на сцене модели.
+Алгоритмы отрисовки модели были разделены на подпрограммы:  
+получение расстояния до каждого из объектов (куб, цилиндр, сфера), получение расстояния до композии объектов,
+пускание луча.
+\begin{lstlisting}[language=GLSL, label=lst:body_compose, caption = {Реализация алгоритмов композиции тел}]
+ /*
+ * Операция пересечения 
+ * distA, distB: расстояние до объектов
+ *
+ * Функция возвращает максимальное расстояние из двух
+ */
+ float intersect(float distA, float distB) {
+  return max(distA, distB);
+}
+/*
+* Операция объединения 
+* distA, distB: расстояние до объектов
+*
+* Функция возвращает минимальное расстояние из двух
+*/
+float union(float distA, float distB) {
+  return min(distA, distB);
+}
+/*
+* Операция разности 
+* distA, distB: расстояние до объектов
+*
+* Функция возвращает максимальное расстояние из двух.
+*/
+float difference(float distA, float distB) {
+  return max(distA, -distB);
+}
+\end{lstlisting}
+\newpage
+\begin{lstlisting}[language=GLSL, label=lst:transform, caption = {Реализация алгоритмов преобразования тела}]
+/*
+* Операция переноса
+*/
+vec3 translate(vec3 p, vec3 v) {
+  return p - v;
+}
+/*
+* Операция поворота
+*/
+vec3 rotate(vec3 p, vec3 rad) {
+  float x, y, z = rad.x, rad.y, rad.z;
+  mat3 m = mat3(
+    cos(y)*cos(z),
+    sin(x)*sin(y)*cos(z) - cos(x)*sin(z),
+    cos(x)*sin(y)*cos(z) + sin(x)*sin(z),
 
+    cos(y)*sin(z),
+    sin(x)*sin(y)*sin(z) + cos(x)*cos(z),
+    cos(x)*sin(y)*sin(z) - sin(x)*cos(z),
 
+    -sin(y),
+    sin(x)*cos(y),
+    cos(x)*cos(y)
+  );
+  return m * p;
+}
+\end{lstlisting}
+\begin{lstlisting}[language=GLSL, label=lst:raymarch, caption = {Реализация алгоритмов пускания луча для отрисовки поверхностей}]
+/*
+* Функция пускания луча
+*/
+float getDistance(vec3 rayOrigin, vec3 rayDirection, out vec3 rayPosition, out vec3 normal, out bool hit) {
+    float dist, depth = 0.0, 0.0;
+    rayPosition = rayOrigin;
+
+    for (int i = 0; i < 64; i++){
+        dist = sceneDist(rayPosition);
+        if (abs(dist) < EPS) {
+            hit = true;
+            break;
+        }
+        depth += dist;
+        rayPosition = rayOrigin + depth * rayDirection;
+    }
+    return depth;
+}
+/*
+* Функция получения расстояния до объекта
+*/
+float sceneDist(vec3 p) {
+  return distance(p);
+}
+/*
+* Функция получения расстояния до конкретной сцены - разность объединения куба и цилиндра с сферой
+*/
+float distance(vec3 p) {
+  float cube = boxDist(rotate(translate(p, cubePosition), cubeRotation), vec3(cubeScale * 2., cubeScale * 2., cubeScale * 2.));
+  float cylinder = cylinderDist(rotate(translate(p, cylinderPosition), cylinderRotation), cylinderScale * 0.5, cylinderScale * 4.0);
+  float sphere = sphereDist(translate(p, spherePosition), sphereScale * 1.);
+
+  return difference(union(cube, cylinder), sphere);
+}
+\end{lstlisting}
+\section{Вывод}
+В данном разделе были рассмотренны средства реализации программ-
+ного обеспечения и листинги исходных кодов программного обеспечения,
+разработанного на основе алгоритмов, изученных в аналитическом разделе и изложенных в 
+конструкторской части.
 %%% mode: latex
 %%% TeX-master: "rpz"
 %%% End:

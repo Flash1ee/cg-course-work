@@ -31,41 +31,21 @@ const vec3 light1Dir = normalize(vec3(0.5, 1, 0.8));
 const vec3 light2Dir = -light1Dir;
 
 // CSG
-float intersect(float dist1, float dist2) {
-  return max(dist1, dist2);
+float intersect(float distA, float distB) {
+  return max(distA, distB);
 }
 
-float unite(float dist1, float dist2) {
-  return min(dist1, dist2);
+float union(float distA, float distB) {
+  return min(distA, distB);
 }
 
-float differ(float dist1, float dist2) {
-  return max(dist1, -dist2);
+float difference(float distA, float distB) {
+  return max(distA, -distB);
 }
 
 // transform
 vec3 translate(vec3 p, vec3 v) {
   return p - v;
-}
-
-vec3 rotateOnAxis(vec3 p, vec3 c, vec3 deg) {
-  float x = radians(deg.x);
-  float y = radians(deg.y);
-  float z = radians(deg.z);
-  mat3 m = mat3(
-    cos(z)*cos(x) - sin(z)*cos(y)*sin(x),
-    cos(z)*sin(x) + sin(z)*cos(y)*cos(x),
-    sin(z)*sin(y),
-
-    -sin(z)*cos(x) - cos(z)*cos(y)*sin(x),
-    -sin(z)*sin(x) + cos(z)*cos(y)*cos(x),
-    cos(z)*sin(y),
-
-    sin(y)*sin(x),
-    -sin(y)*cos(x),
-    cos(y)
-  );
-  return (m * (p - c)) + c;
 }
 
 vec3 rotate(vec3 p, vec3 rad) {
@@ -110,7 +90,7 @@ float distance(vec3 p) {
   float cylinder = cylinderDist(rotate(translate(p, cylinderPosition), cylinderRotation), cylinderScale * 0.5, cylinderScale * 4.0);
   //float sphere = sphereDist(translate(p, spherePosition), sphereScale * 1. * va[0][0]);
   float sphere = sphereDist(translate(p, spherePosition), sphereScale * 1.);
-  return differ(unite(cube, cylinder), sphere);
+  return difference(union(cube, cylinder), sphere);
 }
 
 float sceneDist(vec3 p) {
