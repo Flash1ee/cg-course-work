@@ -55,3 +55,11 @@
 *.run.xml
 *blx.bib
 *.synctex.gz
+*.aux
+*.fls
+*.log
+/build/
+.deps
+*.nlo
+*.clo
+*.fdb*
