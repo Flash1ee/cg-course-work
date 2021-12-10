@@ -35,7 +35,7 @@ float intersect(float distA, float distB) {
   return max(distA, distB);
 }
 
-float union(float distA, float distB) {
+float sdfUnion(float distA, float distB) {
   return min(distA, distB);
 }
 
@@ -87,10 +87,25 @@ float cylinderDist(vec3 p, float radius, float height) {
 // distance function
 float distance(vec3 p) {
   float cube = boxDist(rotate(translate(p, cubePosition), cubeRotation), vec3(cubeScale * 2., cubeScale * 2., cubeScale * 2.));
+  // float cube2 = boxDist(rotate(translate(p, cubePosition+ vec3(1, 1, 1)), cubeRotation), vec3(cubeScale * 2., cubeScale * 2., cubeScale * 2.));
+  // float cube3 = boxDist(rotate(translate(p, cubePosition+ vec3(2, 2, 2)), cubeRotation), vec3(cubeScale * 2., cubeScale * 2., cubeScale * 2.));
+  // float cube4 = boxDist(rotate(translate(p, cubePosition+ vec3(3, 3, 3)), cubeRotation), vec3(cubeScale * 2., cubeScale * 2., cubeScale * 2.));
+
   float cylinder = cylinderDist(rotate(translate(p, cylinderPosition), cylinderRotation), cylinderScale * 0.5, cylinderScale * 4.0);
-  //float sphere = sphereDist(translate(p, spherePosition), sphereScale * 1. * va[0][0]);
+  // float sphere = sphereDist(translate(p, spherePosition), sphereScale * 1. * va[0][0]);
   float sphere = sphereDist(translate(p, spherePosition), sphereScale * 1.);
-  return difference(union(cube, cylinder), sphere);
+  // float sphere2 = sphereDist(translate(p, spherePosition + vec3(1, 1, 1)), sphereScale * 1.);
+
+  // float tmp = intersect(cube, cube2);
+
+  // return difference(sdfUnion(cylinder, cube), difference(sphere, sphere2));
+  return difference(sdfUnion(cube, cylinder), sphere);
+// 
+  // return sdfUnion(cube, cylinder);
+
+  // return cube;
+
+  // return sphere;
 }
 
 float sceneDist(vec3 p) {
