@@ -1,0 +1,145 @@
+\sloppy
+
+% Настройки стиля ГОСТ 7-32
+% Для начала определяем, хотим мы или нет, чтобы рисунки и таблицы нумеровались в пределах раздела, или нам нужна сквозная нумерация.
+\EqInChapter % формулы будут нумероваться в пределах раздела
+\TableInChapter % таблицы будут нумероваться в пределах раздела
+\PicInChapter % рисунки будут нумероваться в пределах раздела
+
+% Добавляем гипертекстовое оглавление в PDF
+\usepackage[
+bookmarks=true, colorlinks=true, unicode=true,
+urlcolor=black,linkcolor=black, anchorcolor=black,
+citecolor=black, menucolor=black, filecolor=black,
+]{hyperref}
+
+\AfterHyperrefFix
+
+\usepackage{microtype}% полезный пакет для микротипографии, увы под xelatex мало чего умеет, но под pdflatex хорошо улучшает читаемость
+
+% Тире могут быть невидимы в Adobe Reader
+\ifInvisibleDashes
+\MakeDashesBold
+\fi
+
+\usepackage{graphicx}   % Пакет для включения рисунков
+
+% С такими оно полями оно работает по-умолчанию:
+% \RequirePackage[left=20mm,right=10mm,top=20mm,bottom=20mm,headsep=0pt,includefoot]{geometry}
+% Если вас тошнит от поля в 10мм --- увеличивайте до 20-ти, ну и про переплёт не забывайте:
+\geometry{right=20mm}
+\geometry{left=30mm}
+\geometry{bottom=20mm}
+\geometry{ignorefoot}% считать от нижней границы текста
+
+\usepackage{color} %use color
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\usepackage{listings} %% собственно, это и есть пакет listings
+\renewcommand{\lstlistingname}{Листинг}
+%%
+%% GLSL definition (c) 2020 Benno Bielmeier
+%%
+\lstdefinelanguage{GLSL}%
+{%
+	morekeywords={%
+	% HLSL constants
+		false,FALSE,NULL,true,TRUE,%
+	% GLSL predefinde macro constant
+		__LINE__,__FILE__,__VERSION__,GL_core_profile,GL_es_profile,GL_compatibility_profile,%
+	% GLSL precision modifier
+		precision,highp,mediump,lowp,%
+	% GLSL control keywords
+		break,case,continue,default,discard,do,else,for,if,return,switch,while,%
+	% GLSL types
+		void,bool,int,uint,float,double,vec2,vec3,vec4,dvec2,dvec3,dvec4,bvec2,bvec3,bvec4,ivec2,ivec3,ivec4,uvec2,uvec3,uvec4,mat2,mat3,mat4,mat2x2,mat2x3,mat2x4,mat3x2,mat3x3,mat3x4,mat4x2,mat4x3,mat4x4,dmat2,dmat3,dmat4,dmat2x2,dmat2x3,dmat2x4,dmat3x2,dmat3x3,dmat3x4,dmat4x2,dmat4x3,dmat4x4,sampler1D,sampler2D,sampler3D,image1D,image2D,image3D,samplerCube,imageCube,sampler2DRect,image2DRect,sampler1DArray,sampler2DArray,image1DArray,image2DArray,samplerBuffer,imageBuffer,sampler2DMS,image2DMS,sampler2DMSArray,image2DMSArray,samplerCubeArray,imageCubeArray,sampler1DShadow,sampler2DShadow,sampler2DRectShadow,sampler1DArrayShadow,sampler2DArrayShadow,samplerCubeShadow,samplerCubeArrayShadow,isampler1D,isampler2D,isampler3D,iimage1D,iimage2D,iimage3D,isamplerCube,iimageCube,isampler2DRect,iimage2DRect,isampler1DArray,isampler2DArray,iimage1DArray,iimage2DArray,isamplerBuffer,iimageBuffer,isampler2DMS,iimage2DMS,isampler2DMSArray,iimage2DMSArray,isamplerCubeArray,iimageCubeArray,atomic_uint,usampler1D,usampler2D,usampler3D,uimage1D,uimage2D,uimage3D,usamplerCube,uimageCube,usampler2DRect,uimage2DRect,usampler1DArray,usampler2DArray,uimage1DArray,uimage2DArray,usamplerBuffer,uimageBuffer,usampler2DMS,uimage2DMS,usampler2DMSArray,uimage2DMSArray,usamplerCubeArray,uimageCubeArray,struct,%
+	% GLSL support variables
+		gl_BackColor,gl_BackLightModelProduct,gl_BackLightProduct,gl_BackMaterial,gl_BackSecondaryColor,gl_ClipDistance,gl_ClipPlane,gl_ClipVertex,gl_Color,gl_DepthRange,gl_DepthRangeParameters,gl_EyePlaneQ,gl_EyePlaneR,gl_EyePlaneS,gl_EyePlaneT,gl_Fog,gl_FogCoord,gl_FogFragCoord,gl_FogParameters,gl_FragColor,gl_FragCoord,gl_FragData,gl_FragDepth,gl_FrontColor,gl_FrontFacing,gl_FrontLightModelProduct,gl_FrontLightProduct,gl_FrontMaterial,gl_FrontSecondaryColor,gl_InstanceID,gl_Layer,gl_LightModel,gl_LightModelParameters,gl_LightModelProducts,gl_LightProducts,gl_LightSource,gl_LightSourceParameters,gl_MaterialParameters,gl_ModelViewMatrix,gl_ModelViewMatrixInverse,gl_ModelViewMatrixInverseTranspose,gl_ModelViewMatrixTranspose,gl_ModelViewProjectionMatrix,gl_ModelViewProjectionMatrixInverse,gl_ModelViewProjectionMatrixInverseTranspose,gl_ModelViewProjectionMatrixTranspose,gl_MultiTexCoord0,gl_MultiTexCoord1,gl_MultiTexCoord2,gl_MultiTexCoord3,gl_MultiTexCoord4,gl_MultiTexCoord5,gl_MultiTexCoord6,gl_MultiTexCoord7,gl_Normal,gl_NormalMatrix,gl_NormalScale,gl_ObjectPlaneQ,gl_ObjectPlaneR,gl_ObjectPlaneS,gl_ObjectPlaneT,gl_Point,gl_PointCoord,gl_PointParameters,gl_PointSize,gl_Position,gl_PrimitiveIDIn,gl_ProjectionMatrix,gl_ProjectionMatrixInverse,gl_ProjectionMatrixInverseTranspose,gl_ProjectionMatrixTranspose,gl_SecondaryColor,gl_TexCoord,gl_TextureEnvColor,gl_TextureMatrix,gl_TextureMatrixInverse,gl_TextureMatrixInverseTranspose,gl_TextureMatrixTranspose,gl_Vertex,gl_VertexID,%
+	% GLSL support constants
+		gl_MaxClipPlanes,gl_MaxCombinedTextureImageUnits,gl_MaxDrawBuffers,gl_MaxFragmentUniformComponents,gl_MaxLights,gl_MaxTextureCoords,gl_MaxTextureImageUnits,gl_MaxTextureUnits,gl_MaxVaryingFloats,gl_MaxVertexAttribs,gl_MaxVertexTextureImageUnits,gl_MaxVertexUniformComponents,%
+	% GLSL support functions
+		abs,acos,all,any,asin,atan,ceil,clamp,cos,cross,degrees,dFdx,dFdy,distance,dot,equal,exp,exp2,faceforward,floor,fract,ftransform,fwidth,greaterThan,greaterThanEqual,inversesqrt,length,lessThan,lessThanEqual,log,log2,matrixCompMult,max,min,mix,mod,noise1,noise2,noise3,noise4,normalize,not,notEqual,outerProduct,pow,radians,reflect,refract,shadow1D,shadow1DLod,shadow1DProj,shadow1DProjLod,shadow2D,shadow2DLod,shadow2DProj,shadow2DProjLod,sign,sin,smoothstep,sqrt,step,tan,texture1D,texture1DLod,texture1DProj,texture1DProjLod,texture2D,texture2DLod,texture2DProj,texture2DProjLod,texture3D,texture3DLod,texture3DProj,texture3DProjLod,textureCube,textureCubeLod,transpose,%
+	% GLSL struct member -> FixMe: Should have dot(.) as delimiter
+		rgb
+	},
+	sensitive=true,%
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},%
+	morecomment=[l]//,%
+    commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]",%
+	morestring=[b]',%
+	moredelim=*[directive]\#,%
+	% keyword.control.hlsl
+	moredirectives={define,defined,elif,else,if,ifdef,endif,line,error,ifndef,include,pragma,undef,warning,extension,version}%
+}[keywords,comments,strings,directives]%
+
+
+\lstset{ %
+	backgroundcolor=\color{white}, % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+	basicstyle=\footnotesize, % the size of the fonts that are used for the code
+	breakatwhitespace=false, % sets if automatic breaks should only happen at whitespace
+	breaklines=true, % sets automatic line breaking
+	captionpos=t, % sets the caption-position to bottom
+	commentstyle=\color{mygreen}, % comment style
+	deletekeywords={...}, % if you want to delete keywords from the given language
+	escapeinside={\%*}{*)}, % if you want to add LaTeX within your code
+	extendedchars=true, % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+	frame=single, % adds a frame around the code
+	keepspaces=true, % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+	keywordstyle=\color{blue}, % keyword style
+	% language=Octave, % the language of the code
+	morekeywords={*,...}, % if you want to add more keywords to the set
+	numbers=left, % where to put the line-numbers; possible values are (none, left, right)
+	numbersep=5pt, % how far the line-numbers are from the code
+	numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+	rulecolor=\color{black}, % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+	showspaces=false, % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+	showstringspaces=false, % underline spaces within strings only
+	showtabs=false, % show tabs within strings adding particular underscores
+	stepnumber=1, % the step between two line-numbers. If it's 1, each line will be numbered
+	stringstyle=\color{mymauve}, % string literal style
+	tabsize=2, % sets default tabsize to 2 spaces
+	title=\lstname % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+%END of listing package%
+
+% Пакет Tikz
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning,shadows}
+
+% Произвольная нумерация списков.
+\usepackage{enumerate}
+
+% ячейки в несколько строчек
+\usepackage{multirow}
+
+% itemize внутри tabular
+\usepackage{paralist,array}
+
+%\setlength{\parskip}{1ex plus0.5ex minus0.5ex} % разрыв между абзацами
+\setlength{\parskip}{1ex} % разрыв между абзацами
+\usepackage{blindtext}
+
+% Центрирование подписей к плавающим окружениям
+%\usepackage[justification=centering]{caption}
+
+\usepackage{newfloat}
+\DeclareFloatingEnvironment[
+placement={!ht},
+name=Equation
+]{eqndescNoIndent}
+\edef\fixEqndesc{\noexpand\setlength{\noexpand\parindent}{\the\parindent}\noexpand\setlength{\noexpand\parskip}{\the\parskip}}
+\newenvironment{eqndesc}[1][!ht]{%
+    \begin{eqndescNoIndent}[#1]%
+\fixEqndesc%
+}
+{\end{eqndescNoIndent}}
+
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
